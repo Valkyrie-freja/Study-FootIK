@@ -18,9 +18,9 @@ public class Walk : MonoBehaviour
         Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     }
 
-    void Move(float x, float z)
+    void Move(float x_input, float z_input)
     {
-        if (x == 0 && z == 0)
+        if (x_input == 0 && z_input == 0)
         {
             animator.SetBool("isWalking", false);
             rigidbody.velocity = Vector3.zero;
@@ -29,13 +29,23 @@ public class Walk : MonoBehaviour
         
         // move
         const float speed = 5.0f;
-        float move_length = Mathf.Sqrt(x * x + z * z);
+        float move_length = Mathf.Sqrt(x_input * x_input + z_input * z_input);
         float length_inv = 1f / move_length;
         animator.SetBool("isWalking", true);
-        rigidbody.velocity = new Vector3(x*length_inv, 0, z*length_inv) * speed;
+
+        Vector3 forceInput = new Vector3(x_input, 0, z_input);
+        // 粘性抵抗
+        Vector3 resistViscosity = new Vector3(rigidbody.velocity.x, rigidbody.velocity.y, rigidbody.velocity.z);
+        // 慣性抵抗
+        Vector3 resistInertia = new Vector3(
+            rigidbody.velocity.x * rigidbody.velocity.x,
+            rigidbody.velocity.y * rigidbody.velocity.y,
+            rigidbody.velocity.z * rigidbody.velocity.z);
+        Vector3 forceEffective = forceInput - resistViscosity - resistInertia;
+        rigidbody.AddForce(forceEffective);
         
         // rotate
-        Vector3 targetDirection = new Vector3(x, 0, z);
+        Vector3 targetDirection = new Vector3(x_input, 0, z_input);
         if(targetDirection.magnitude > 0.1)
         {
             const float smooth = 10.0f;
