@@ -47,10 +47,8 @@ public class Walk : MonoBehaviour
         // move
         animator.SetBool("isWalking", true);
         Vector3 velocityInput = new Vector3(x_input, 0, z_input);
-        float move_length_inv = 1f / velocityInput.magnitude;
-        Vector3 velocityInput_norm = velocityInput * move_length_inv;
         const float speed = 5.0f;
-        Vector3 velocityEffective = velocityInput_norm * speed;
+        Vector3 velocityEffective = velocityInput.normalized * speed;
         rigidbody.velocity = velocityEffective;
         
         // rotate
