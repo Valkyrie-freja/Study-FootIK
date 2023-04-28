@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 public class Walk : MonoBehaviour
 {
@@ -39,6 +42,14 @@ public class Walk : MonoBehaviour
         }
     }
 
+    private Vector3 ToCameraStandardVector(Vector3 _input_vector)
+    {
+        Quaternion input_rotate = Quaternion.FromToRotation(Vector3.forward, _input_vector);
+        Vector3 camera_look_vector = mainCamera.transform.forward;
+        
+        return input_rotate * camera_look_vector;
+    }
+    
     void Move(float x_input, float z_input)
     {
         if (x_input == 0 && z_input == 0)
@@ -50,16 +61,11 @@ public class Walk : MonoBehaviour
         
         // move
         animator.SetBool("isWalking", true);
-
         Vector3 input_vector = new Vector3(x_input, 0, z_input);
-        Quaternion input_rotate = Quaternion.FromToRotation(Vector3.forward, input_vector);
-        Vector3 camera_look_vector = mainCamera.transform.forward;
-        
-        // world_coordinate_player_look_vector
-        Vector3 world_coodinate_player_look_vector = input_rotate * camera_look_vector; // normalized maybe
+        Vector3 player_look_vector = ToCameraStandardVector(input_vector); // normalized maybe
         
         const float speed = 5.0f;
-        Vector3 velocityEffective = world_coodinate_player_look_vector * speed;
+        Vector3 velocityEffective = player_look_vector * speed;
         rigidbody.velocity = velocityEffective;
         
         // rotate
