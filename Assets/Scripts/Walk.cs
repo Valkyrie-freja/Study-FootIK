@@ -6,10 +6,14 @@ public class Walk : MonoBehaviour
 {
     private Animator animator;
     private Rigidbody rigidbody;
+
+    private GameObject mainCamera;
+    
     void Start()
     {
         animator = GetComponent<Animator>();
         rigidbody = GetComponent<Rigidbody>();
+        mainCamera = Camera.main.gameObject;
     }
 
     // Update is called once per frame
@@ -46,18 +50,26 @@ public class Walk : MonoBehaviour
         
         // move
         animator.SetBool("isWalking", true);
-        Vector3 velocityInput = new Vector3(x_input, 0, z_input);
+
+        Vector3 input_vector = new Vector3(x_input, 0, z_input);
+        Quaternion input_rotate = Quaternion.FromToRotation(Vector3.forward, input_vector);
+        Vector3 camera_look_vector = mainCamera.transform.forward;
+        
+        // world_coordinate_player_look_vector
+        Vector3 world_coodinate_player_look_vector = input_rotate * camera_look_vector; // normalized maybe
+        
         const float speed = 5.0f;
-        Vector3 velocityEffective = velocityInput.normalized * speed;
+        Vector3 velocityEffective = world_coodinate_player_look_vector * speed;
         rigidbody.velocity = velocityEffective;
         
         // rotate
-        Vector3 targetDirection = velocityInput;
-        if(targetDirection.magnitude > 0.1)
+        Vector3 inputDirection = input_vector;
+        if(inputDirection.magnitude > 0.1)
         {
             const float smooth = 10.0f;
-            Quaternion rotation = Quaternion.LookRotation(targetDirection);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * smooth);
+            Quaternion currentRotation = transform.rotation;
+            Quaternion nextRotation = Quaternion.LookRotation(inputDirection);
+            currentRotation = Quaternion.Lerp(currentRotation, nextRotation, Time.deltaTime * smooth);
         }
     }
 }
