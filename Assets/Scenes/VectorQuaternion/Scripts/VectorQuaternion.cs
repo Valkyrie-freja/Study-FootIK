@@ -9,13 +9,6 @@ public class VectorQuaternion : MonoBehaviour
     [SerializeField] private GameObject arrow_input;
     [SerializeField] private GameObject arrow_player_look;
     
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         Vector3 controller_input_vector = new Vector3(
