@@ -13,12 +13,14 @@ public class VectorQuaternion : MonoBehaviour
 
     void Update()
     {
-        Vector3 controller_input_L_vector = new Vector3(Input.GetAxis("Horizontal"),   0.0f, Input.GetAxis("Vertical"));
-        Vector3 player_look_vector = ToCameraStandardVector(controller_input_L_vector);
+        // left stick input
+        Vector3 controller_input_l_vector = new Vector3(Input.GetAxis("Horizontal"),   0.0f, Input.GetAxis("Vertical"));
+        Vector3 player_look_vector = ToCameraStandardVector(controller_input_l_vector);
         SetArrowStatus(arrow_player_look, player_look_vector);
         
-        Vector3 controller_input_R_vector = new Vector3(Input.GetAxis("Horizontal_R"), 0.0f, Input.GetAxis("Vertical_R"));
-        camera.transform.rotation = ToQuaternion(controller_input_R_vector);
+        // right stick input
+        Vector3 controller_input_r_vector = new Vector3(Input.GetAxis("Horizontal_R"), 0.0f, Input.GetAxis("Vertical_R"));
+        camera.transform.rotation = ToQuaternion(controller_input_r_vector);
     }
 
     private void SetArrowStatus(GameObject _arrow, float _scale, Quaternion _rotate)
