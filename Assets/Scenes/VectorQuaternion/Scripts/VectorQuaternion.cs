@@ -15,6 +15,7 @@ public class VectorQuaternion : MonoBehaviour
     {
         // left stick input
         Vector3 controller_input_l_vector = new Vector3(Input.GetAxis("Horizontal"),   0.0f, Input.GetAxis("Vertical"));
+        SetArrowStatus(arrow_input, controller_input_l_vector);
         Vector3 player_look_vector = ToCameraStandardVector(controller_input_l_vector);
         SetArrowStatus(arrow_player_look, player_look_vector);
         
@@ -48,17 +49,24 @@ public class VectorQuaternion : MonoBehaviour
 
         return rotate;
     }
-    
-    private Vector3 ToCameraStandardVector(Vector3 _input_vector)
-    {
-        Quaternion input_rotate = ToQuaternion(_input_vector);
-        SetArrowStatus(arrow_input, _input_vector.magnitude, input_rotate);
 
+    public Vector3 ToObjectStandardVector(GameObject _game_object, Vector3 _vector)
+    {
+        Quaternion rotate = ToQuaternion(_vector);
+        Vector3 object_look_vector = _game_object.transform.forward;
+        // use only x and z
+        object_look_vector.y = 0.0f;
+        
+        return _vector.magnitude * (rotate * object_look_vector);
+    }
+    
+    private Vector3 ToCameraStandardVector(Vector3 _vector)
+    {
         Vector3 camera_look_vector = camera.transform.forward;
         // use only x and z
         camera_look_vector.y = 0.0f;
         SetArrowStatus(arrow_camera, camera_look_vector);
         
-        return _input_vector.magnitude * (input_rotate * camera_look_vector);
+        return ToObjectStandardVector(camera, _vector);
     }
 }

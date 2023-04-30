@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/VectorQuaternion/VectorQuaternion.unity
+    guid: 101c3ab7bc032eb48b8604fd6f2b3eb8
   m_configObjects: {}
