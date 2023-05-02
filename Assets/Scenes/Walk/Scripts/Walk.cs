@@ -19,6 +19,7 @@ public class Walk : MonoBehaviour
         animator = GetComponent<Animator>();
         rigidbody = GetComponent<Rigidbody>();
         mainCamera = Camera.main.gameObject;
+        vector_controller = new VectorQuaternion();
     }
 
     // Update is called once per frame
